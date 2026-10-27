@@ -1,70 +1,48 @@
-# Getting Started with Create React App
+# iNotebook
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack notes application with account registration, login and user-owned note management.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Registration and login with bcrypt password hashing and JWT authentication.
+- Add, read, update and delete notes.
+- Express middleware identifies the authenticated user.
+- Note update/delete routes check ownership.
+- React Context shares note state across the interface.
 
-### `npm start`
+## Architecture
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+`React + React Router + Context → Express REST API → MongoDB / Mongoose`
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+| Path | Responsibility |
+| --- | --- |
+| `src/components/` | Account forms and note interface |
+| `src/context/notes/NoteState.js` | Client note state and API calls |
+| `backend/routes/auth.js` | Registration, login and account lookup |
+| `backend/routes/notes.js` | Note CRUD and ownership checks |
+| `backend/middleware/fetchUser.js` | JWT verification |
+| `backend/models/` | User and note schemas |
+| `backend/db.js` | Local MongoDB connection |
 
-### `npm test`
+## Run locally
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Start MongoDB at `mongodb://localhost:27017/iNotebook`.
 
-### `npm run build`
+```bash
+# Terminal 1: API on port 5000
+cd backend
+npm install
+node index.js
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+# Terminal 2: React app on port 3000, from repository root
+npm install
+npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The frontend uses a local API address. Root `npm run build` builds the client; the backend has no implemented automated test suite.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Status
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+An earlier MERN implementation, intended for local demonstration with synthetic accounts. The source contains a hardcoded JWT signing secret, no token expiry in the signing calls and broad CORS. Before any public deployment, replace the secret with a private environment value, invalidate old tokens, add expiry and harden the API. This documentation update does not claim those changes are implemented.
